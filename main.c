@@ -27,9 +27,9 @@ int main() {
     
     while (1) {
         printf("\n=== Inventory Tracker ===\n");
-        printf("1. Add item\n");
+        printf("1. Add an item\n");
         printf("2. View all items\n");
-        printf("3. Mark item as sold\n");
+        printf("3. Mark an item as sold\n");
         printf("4. Exit\n");
         printf("Choose an option: ");
         scanf("%d", &choice);
@@ -84,11 +84,48 @@ void addItem(char name[], float price, float sale, bool sold) {
 }
 
 void viewItems() {
-    // TODO: Fill in code to view all items
-    printf("[viewItems] Function not implemented yet.\n");
+    if (itemCount == 0) {
+        printf("📦 No items in inventory.\n");
+        return;
+    }
+
+    printf("\n%-20s %-15s %-15s %-10s\n", "Item", "Purchase Price", "Sale Price", "Sold");
+    printf("---------------------------------------------------------------------\n");
+    
+    for (int x = 0; x < itemCount; x++) {
+        printf("%-20s $%-14.2f $%-14.2f %-10s\n",
+               inventory[x].name,
+               inventory[x].purchasePrice,
+               inventory[x].salePrice,
+               inventory[x].isSold ? "Yes" : "No");
+    }
 }
 
 void markAsSold() {
-    // TODO: Fill in code to mark item as sold
-    printf("[markAsSold] Function not implemented yet.\n");
+    if (itemCount == 0) {
+        printf("📦 No items in inventory.\n");
+        return;
+    }
+
+    printf("\nItems:\n");
+    for (int x = 0; x < itemCount; x++){
+        printf("%d. %-20s Sold: %-3s\n", 
+               x + 1, 
+               inventory[x].name, 
+               inventory[x].isSold ? "Yes" : "No");
+    }
+
+    int choice;
+    printf("Input which item number to mark as sold: ");
+    scanf("%d", &choice);
+    while(getchar() != '\n'); // Clear input buffer
+    choice--; // Convert to 0-based index
+
+    if (choice < 0 || choice >= itemCount) {
+        printf("❌ Invalid selection.\n");
+        return;
+    }
+
+    inventory[choice].isSold = true;
+    printf("✅ Item '%s' marked as sold.\n", inventory[choice].name);
 }
