@@ -17,6 +17,7 @@ int itemCount = 0;
 void addItem(char name[], float price, float sale, bool sold);
 void viewItems();
 void markAsSold();
+void saveToCSV();
 
 int main() {
     int choice;
@@ -25,7 +26,7 @@ int main() {
     char soldChar;
     bool sold;
     
-    while (1) {
+    do{
         printf("\n=== Inventory Tracker ===\n");
         printf("1. Add an item\n");
         printf("2. View all items\n");
@@ -62,11 +63,15 @@ int main() {
                 break;
             case 4:
                 printf("Goodbye!\n");
-                return 0;
+		break;
             default:
                 printf("Invalid option, try again.\n");
         }
-    }
+    }while(choice != 4);
+    
+    saveToCSV();
+    
+    
     return 0;
 }
 
@@ -128,4 +133,23 @@ void markAsSold() {
 
     inventory[choice].isSold = true;
     printf("✅ Item '%s' marked as sold.\n", inventory[choice].name);
+}
+
+void saveToCSV(){
+    FILE *file = fopen("inventory.csv", "w");
+    if(file == NULL){
+        printf("File CSV could not be opened.\n");
+        return;
+    }
+    
+    fprintf(file, "Name,Purchase Price,Sale Price,Sold\n");
+    
+    for(int x = 0; x < itemCount; x++){
+        fprintf(file, "%s,%.2f,%.2f,%s\n",
+        inventory[x].name,
+        inventory[x].purchasePrice,
+        inventory[x].salePrice,
+        inventory[x].isSold ? "Yes" : "No");
+    }
+    fclose(file);
 }
